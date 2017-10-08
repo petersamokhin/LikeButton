@@ -41,7 +41,9 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
     private int dotSecondaryColor;
     private int circleStartColor;
     private int circleEndColor;
-    private int iconSize;
+    //private int iconSize;
+
+    private int iconWidth, iconHeight;
 
 
     private float animationScaleFactor;
@@ -86,9 +88,12 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
 
         final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.LikeButton, defStyle, 0);
 
-        iconSize = array.getDimensionPixelSize(R.styleable.LikeButton_icon_size, -1);
-        if (iconSize == -1)
-            iconSize = 40;
+        iconWidth = array.getDimensionPixelSize(R.styleable.LikeButton_icon_size, -1);
+        iconHeight = array.getDimensionPixelSize(R.styleable.LikeButton_icon_size, -1);
+        if (iconWidth == -1)
+            iconWidth = 40;
+        if (iconHeight == -1)
+            iconHeight = 40;
 
         String iconType = array.getString(R.styleable.LikeButton_icon_type);
 
@@ -293,8 +298,8 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
     public void setLikeDrawableRes(@DrawableRes int resId) {
         likeDrawable = ContextCompat.getDrawable(getContext(), resId);
 
-        if (iconSize != 0) {
-            likeDrawable = Utils.resizeDrawable(getContext(), likeDrawable, iconSize, iconSize);
+        if (iconWidth != 0 && iconHeight != 0) {
+            likeDrawable = Utils.resizeDrawable(getContext(), likeDrawable, iconWidth, iconHeight);
         }
 
         if (isChecked) {
@@ -310,8 +315,8 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
     public void setLikeDrawable(Drawable likeDrawable) {
         this.likeDrawable = likeDrawable;
 
-        if (iconSize != 0) {
-            this.likeDrawable = Utils.resizeDrawable(getContext(), likeDrawable, iconSize, iconSize);
+        if (iconWidth != 0 && iconHeight != 0) {
+            this.likeDrawable = Utils.resizeDrawable(getContext(), likeDrawable, iconWidth, iconHeight);
         }
 
         if (isChecked) {
@@ -327,8 +332,8 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
     public void setUnlikeDrawableRes(@DrawableRes int resId) {
         unLikeDrawable = ContextCompat.getDrawable(getContext(), resId);
 
-        if (iconSize != 0) {
-            unLikeDrawable = Utils.resizeDrawable(getContext(), unLikeDrawable, iconSize, iconSize);
+        if (iconWidth != 0 && iconHeight != 0) {
+            unLikeDrawable = Utils.resizeDrawable(getContext(), unLikeDrawable, iconWidth, iconHeight);
         }
 
         if (!isChecked) {
@@ -344,8 +349,8 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
     public void setUnlikeDrawable(Drawable unLikeDrawable) {
         this.unLikeDrawable = unLikeDrawable;
 
-        if (iconSize != 0) {
-            this.unLikeDrawable = Utils.resizeDrawable(getContext(), unLikeDrawable, iconSize, iconSize);
+        if (iconWidth != 0 && iconHeight != 0) {
+            this.unLikeDrawable = Utils.resizeDrawable(getContext(), unLikeDrawable, iconWidth, iconHeight);
         }
 
         if (!isChecked) {
@@ -382,6 +387,10 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
         setIconSizePx((int) Utils.dipToPixels(getContext(), (float) iconSize));
     }
 
+    public void setIconSizeDp(int width, int height) {
+        setIconSizePx((int) Utils.dipToPixels(getContext(), (float) width), (int) Utils.dipToPixels(getContext(), (float) height));
+    }
+
     /**
      * Sets the size of the drawable/icon that's being used. The views that generate
      * the like effect are also updated to reflect the size of the icon.
@@ -389,10 +398,19 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
      * @param iconSize
      */
     public void setIconSizePx(int iconSize) {
-        this.iconSize = iconSize;
+        this.iconWidth = iconSize;
+        this.iconHeight = iconSize;
         setEffectsViewSize();
         this.unLikeDrawable = Utils.resizeDrawable(getContext(), unLikeDrawable, iconSize, iconSize);
         this.likeDrawable = Utils.resizeDrawable(getContext(), likeDrawable, iconSize, iconSize);
+    }
+
+    public void setIconSizePx(int width, int height) {
+        this.iconWidth = width;
+        this.iconHeight = height;
+        setEffectsViewSize();
+        this.unLikeDrawable = Utils.resizeDrawable(getContext(), unLikeDrawable, width, height);
+        this.likeDrawable = Utils.resizeDrawable(getContext(), likeDrawable, width, height);
     }
 
     /**
@@ -495,9 +513,9 @@ public class LikeButton extends FrameLayout implements View.OnClickListener {
      * of the icon being used.
      */
     private void setEffectsViewSize() {
-        if (iconSize != 0) {
-            dotsView.setSize((int) (iconSize * animationScaleFactor), (int) (iconSize * animationScaleFactor));
-            circleView.setSize(iconSize, iconSize);
+        if (iconWidth != 0 && iconHeight != 0) {
+            dotsView.setSize((int) (iconWidth * animationScaleFactor), (int) (iconHeight * animationScaleFactor));
+            circleView.setSize(iconWidth, iconHeight);
         }
     }
 
